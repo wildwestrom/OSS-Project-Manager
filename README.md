@@ -8,7 +8,7 @@ Steps:
 1. Install Python on your machine.
 2. Clone the project with `git clone`.
 3. Open the project.
-3. Run this command in a terminal.
+4. Run this command in a terminal.
 ```shell
 python main.py
 ```
