@@ -19,4 +19,4 @@ If you don't know what a terminal is. Go google it.
 
 If you don't know what Python is, why are you here?
 
-The program comes with instructions built in once you run it. For more information see the [docs](./docs/Usage.md).
+The program comes with instructions built in once you run it. For details about the code itself see the [architecture docs](./docs/Architecture.md).
