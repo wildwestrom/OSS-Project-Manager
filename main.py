@@ -1,14 +1,37 @@
 import os
 from typing import Callable
 from uuid import uuid4
+from semver import Version
 
+def accept_alpha_only(prompt):
+    while True:
+        given_input = input(prompt)
+        valid = True
+        for ch in given_input:
+            if not (ch.isalpha() or ch.isspace()):
+                valid = False
+        if len(given_input) == 0:
+            valid = False
+        if valid:
+            break
+        else:
+            print("Input must be letters and spaces only")
+    return given_input
 
 def get_info() -> tuple[str, str, str, str, str]:
     name = input("Input name of project: ")
-    version = input(f"What version is {name} at?: ")
+    version = None
+    while version is None:
+        maybe_version = input(f"What version is {name} at?: ")
+        if not Version.is_valid(maybe_version):
+            print(f"{maybe_version} is not a valid version number,")
+            print("Adhere to semantic versioning conventions.")
+            continue
+        else:
+            version = maybe_version
     year_started = None
     while year_started is None:
-        maybe_year_started = input(f"When was {name} started?: ")
+        maybe_year_started = input(f"What year was {name} started?: ")
         try:
             year_started = int(maybe_year_started)
         except ValueError:
@@ -22,16 +45,15 @@ def get_info() -> tuple[str, str, str, str, str]:
             continue
 
     language = input("What is the main language of the project?: ")
-    lead_dev = input("What is the name of the leader of the project?: ")
+    lead_dev = accept_alpha_only("What is the name of the leader of the project?: ")
     print()
     info = (name, version, year_started, language, lead_dev)
     return info
 
-
 def get_contributor_info():
-    name = input("Input name: ")
-    language = input("Input language: ")
-    ctry = input("Input country: ")
+    name = accept_alpha_only("Input name: ")
+    language = accept_alpha_only("Input language: ")
+    ctry = accept_alpha_only("Input country: ")
     return {
         "name": name,
         "role": "new contributor",
@@ -48,7 +70,7 @@ STATUS_TYPES = {"open", "in-progress", "resolved"}
 
 def track_issue():
     issue_id = f"ISS-{str(uuid4())[:4].upper()}"
-    title = input("Give a title to this issue: ")
+    title = accept_alpha_only("Give a title to this issue: ")
 
     while True:
         issue_type = input("Is this a bug or a feature?: ").lower()
@@ -71,7 +93,7 @@ def track_issue():
         else:
             print(f"Not one of {STATUS_TYPES}")
 
-    name = input(f"Who is reporting this {issue_type}?: ")
+    name = accept_alpha_only(f"Who is reporting this {issue_type}?: ")
 
     return {
         "id": issue_id,
@@ -83,7 +105,7 @@ def track_issue():
     }
 
 
-def ask_the_user(yes_or_no_question: str, on_yes: Callable):
+def ask_yes_or_no(yes_or_no_question: str, on_yes: Callable):
     received_values = []
     while True:
         ans = input(yes_or_no_question).lower()
@@ -99,11 +121,11 @@ def ask_the_user(yes_or_no_question: str, on_yes: Callable):
 
 
 def register_contributors():
-    return ask_the_user("Register new contributor?: ", get_contributor_info)
+    return ask_yes_or_no("Would you like to register a new contributor?: ", get_contributor_info)
 
 
 def track_issues():
-    return ask_the_user("Add a new issue?: ", track_issue)
+    return ask_yes_or_no("Would you like to add a new issue?: ", track_issue)
 
 
 if __name__ == "__main__":

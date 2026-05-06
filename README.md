@@ -7,7 +7,8 @@ Manages an open source project
 Steps:  
 1. Install Python 3.13 on your machine.
 2. Clone the project with `git clone`.
-3. Open the project.
+3. Open the project folder.
+3. Install the `semver` package: `pip install semver`
 4. Run this command in a terminal.
 ```shell
 python main.py
